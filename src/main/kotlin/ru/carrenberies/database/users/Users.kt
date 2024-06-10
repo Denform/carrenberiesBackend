@@ -6,7 +6,7 @@ import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 
 object Users: Table() {
-    private val login = Users.varchar("login", 45)
+    private val login = Users.integer("login")
     private val password = Users.varchar("password", 45)
     private val email = Users.varchar("email", 45)
     private val username = Users.varchar("username", 45)
@@ -22,7 +22,7 @@ object Users: Table() {
         }
     }
 
-    fun fetchUser(login: String): UserDTO? {
+    fun fetchUser(login: Int): UserDTO? {
        return try {
            transaction { val userModel = Users.select { Users.login.eq(login)}.single()
                UserDTO(

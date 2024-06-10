@@ -5,6 +5,7 @@ import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import org.jetbrains.exposed.exceptions.ExposedSQLException
+import ru.carrenberies.database.Id_count
 import ru.carrenberies.database.tokens.TokenDTO
 import ru.carrenberies.database.tokens.Tokens
 import ru.carrenberies.database.users.UserDTO
@@ -43,12 +44,14 @@ class RegisterController(private val call: ApplicationCall) {
 
             Tokens.insert(
                 TokenDTO(
-                    rowId = UUID.randomUUID().toString(),
+                    rowId = Id_count.max_id_token,
                     login = registerReceiveRemote.login,
                     token = token
                 )
+
             )
 
+            Id_count.max_id_token++
             call.respond(RegisterResponseRemote(token = token))
         }
     }

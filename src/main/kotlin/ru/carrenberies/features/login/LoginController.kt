@@ -4,6 +4,7 @@ import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
+import ru.carrenberies.database.Id_count
 import ru.carrenberies.database.tokens.TokenDTO
 import ru.carrenberies.database.tokens.Tokens
 import ru.carrenberies.database.users.Users
@@ -24,12 +25,12 @@ class LoginController(private val call: ApplicationCall) {
                 val token = UUID.randomUUID().toString()
                 Tokens.insert(
                     TokenDTO(
-                        rowId = UUID.randomUUID().toString(),
+                        rowId = Id_count.max_id_token,
                         login = receive.login,
                         token = token
                     )
                 )
-
+                Id_count.max_id_token++
                 call.respond(LoginResponseRemote(token = token))
             } else {
                 call.respond(HttpStatusCode.BadRequest, "Invalid password")
