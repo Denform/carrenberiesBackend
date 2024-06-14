@@ -14,7 +14,7 @@ object Users: Table() {
     fun insert(userDTO: UserDTO) {
         transaction {
             Users.insert {
-                it[login] = userDTO.login
+//                it[login] = userDTO.login
                 it[password] = userDTO.password
                 it[username] = userDTO.username
                 it[email] = userDTO.email
@@ -22,14 +22,14 @@ object Users: Table() {
         }
     }
 
-    fun fetchUser(login: Int): UserDTO? {
+    fun fetchUser(email: String): UserDTO? {
        return try {
-           transaction { val userModel = Users.select { Users.login.eq(login)}.single()
+           transaction { val userModel = Users.select { Users.email.eq(email)}.single()
                UserDTO(
                    login = userModel[Users.login],
                    password = userModel[password],
                    username = userModel[username],
-                   email = userModel[email]
+                   email = userModel[Users.email]
                )
            }
        } catch (e: Exception){

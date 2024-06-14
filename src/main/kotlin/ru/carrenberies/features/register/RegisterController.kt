@@ -5,9 +5,6 @@ import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import org.jetbrains.exposed.exceptions.ExposedSQLException
-import ru.carrenberies.database.Id_count
-import ru.carrenberies.database.tokens.TokenDTO
-import ru.carrenberies.database.tokens.Tokens
 import ru.carrenberies.database.users.UserDTO
 import ru.carrenberies.database.users.Users
 import ru.carrenberies.utils.isValidEmail
@@ -21,17 +18,15 @@ class RegisterController(private val call: ApplicationCall) {
             call.respond(HttpStatusCode.BadRequest, "Email is not Valid")
         }
 
-        val userDTO = Users.fetchUser(registerReceiveRemote.login)
+        val userDTO = Users.fetchUser(registerReceiveRemote.email)
 
         if (userDTO != null) {
-            call.respond(HttpStatusCode.Conflict, "User already exists")
+            call.respond(HttpStatusCode.Conflict, "User already exists, UserId: ${userDTO.login}")
         } else {
-            val token = UUID.randomUUID().toString()
-
             try {
                 Users.insert(
                     UserDTO(
-                        login = registerReceiveRemote.login,
+                        login = 0,
                         password = registerReceiveRemote.password,
                         email = registerReceiveRemote.email,
                         username = ""
@@ -41,18 +36,7 @@ class RegisterController(private val call: ApplicationCall) {
                 call.respond(HttpStatusCode.Conflict, "User already exists")
             }
 
-
-            Tokens.insert(
-                TokenDTO(
-                    rowId = Id_count.max_id_token,
-                    login = registerReceiveRemote.login,
-                    token = token
-                )
-
-            )
-
-            Id_count.max_id_token++
-            call.respond(RegisterResponseRemote(token = token))
+            call.respond(RegisterResponseRemote(email = registerReceiveRemote.email, password = registerReceiveRemote.password))
         }
     }
 }
