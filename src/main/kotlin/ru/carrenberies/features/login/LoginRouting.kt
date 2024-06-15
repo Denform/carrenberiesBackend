@@ -8,12 +8,7 @@ fun Application.configureLoginRouting() {
         post("/login") {
 //            val loginController = LoginController(call)
 //            loginController.performLogin()
-//            LoginController(call).performLogin()
-        }
-
-        get ("/login/check"){
-//            val loginController = LoginController(call)
-            LoginController(call).checkUser()
+            LoginController(call).performLogin()
         }
     }
 }

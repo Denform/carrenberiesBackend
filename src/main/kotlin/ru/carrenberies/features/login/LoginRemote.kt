@@ -4,12 +4,12 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class LoginReceiveRemote(
-    val login: Int,
+    val phone_number: String,
     val password: String
 )
 
-@Serializable
-data class LoginResponseRemote(
-    val token: String,
-    val login: String
-)
+//@Serializable
+//data class LoginResponseRemote(
+//    val phone_number: String,
+//    val password: String
+//)

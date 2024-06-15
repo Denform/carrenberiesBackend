@@ -14,29 +14,32 @@ class RegisterController(private val call: ApplicationCall) {
 
     suspend fun registerNewUser() {
         val registerReceiveRemote = call.receive<RegisterReceiveRemote>()
-        if (!registerReceiveRemote.email.isValidEmail()) {
+        if (!registerReceiveRemote.phone_number.isValidEmail()) {
             call.respond(HttpStatusCode.BadRequest, "Email is not Valid")
         }
 
-        val userDTO = Users.fetchUser(registerReceiveRemote.email)
+        val userDTO = Users.fetchUser(registerReceiveRemote.phone_number)
 
         if (userDTO != null) {
-            call.respond(HttpStatusCode.Conflict, "User already exists, UserId: ${userDTO.login}")
+            call.respond(HttpStatusCode.Conflict, "User already exists, UserId: ${userDTO.id_user}")
         } else {
             try {
                 Users.insert(
                     UserDTO(
-                        login = 0,
+                        id_user = 0,
                         password = registerReceiveRemote.password,
-                        email = registerReceiveRemote.email,
-                        username = ""
+                        phone_number = registerReceiveRemote.phone_number,
+                        first_name = registerReceiveRemote.first_name,
+                        second_name = "",
+                        user_type = registerReceiveRemote.user_type,
+                        rating = 0
                     )
                 )
             } catch (e: ExposedSQLException) {
                 call.respond(HttpStatusCode.Conflict, "User already exists")
             }
 
-            call.respond(RegisterResponseRemote(email = registerReceiveRemote.email, password = registerReceiveRemote.password))
+            call.respond(RegisterResponseRemote(phone_number = registerReceiveRemote.phone_number, password = registerReceiveRemote.password))
         }
     }
 }
