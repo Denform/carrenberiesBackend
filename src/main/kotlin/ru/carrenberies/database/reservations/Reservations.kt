@@ -1,6 +1,7 @@
 package ru.carrenberies.database.reservations
 
 import org.jetbrains.exposed.sql.Table
+import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -12,7 +13,7 @@ object Reservations: Table() {
     private val id_rest = Reservations.integer("id_rest")
     private val data = Reservations.varchar("data",45)
     private val time = Reservations.varchar("time",10)
-    private val duration_time = Reservations.varchar("duration_time",10)
+    private val duration_time = Reservations.integer("duration_time")
     private val count_vis = Reservations.integer("count_vis")
 
     fun insert(reservationDTO: ReservationDTO) {
@@ -43,5 +44,21 @@ object Reservations: Table() {
         }
     }
 
+    fun findIdBook(id_table: Int,id_rest: Int, data: String, time: String): ReservationDTO? {
+        return transaction {
+            Reservations.select {
+                (Reservations.id_table eq id_table) and
+                (Reservations.id_rest eq id_rest) and
+                (Reservations.data eq data) and
+                (Reservations.time eq time)
+            }
+                .map {
+                    ReservationDTO(
+                       id_book = it[id_book]
+                    )
+                }
+                .singleOrNull()
+        }
+    }
 
 }

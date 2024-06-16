@@ -38,17 +38,42 @@ class RestController(private val call: ApplicationCall) {
     suspend fun getFoodTypes() {
         val restReceiveRemote = call.receive<RestReceiveRemote>()
         val restMenudto = Rest_menu.findFoodByRestId(restReceiveRemote.id_rest)
-        val menuSet: MutableSet<String> = mutableSetOf()
+        val foodTypes: MutableSet<String> = mutableSetOf()
 
         for (item in restMenudto) {
-            val foodType = List_food.findFoodById(item.id_food)?.food_type
-            if (foodType != null) {
-                menuSet.add(foodType)
+            val foodInfo = List_food.findFoodById(item.id_food)
+            if (foodInfo != null) {
+                foodTypes.add(foodInfo.food_type)
             }
         }
 
         try {
-            call.respond(menuSet.toList()) // преобразуем Set обратно в List и отправляем результат
+            call.respond(foodTypes.toList())
+        } catch (e: ExposedSQLException) {
+            call.respond(HttpStatusCode.Conflict, "400")
+        }
+    }
+
+    suspend fun getRestFood() {
+        val restReceiveRemote = call.receive<RestReceiveRemote>()
+        val restMenudto = Rest_menu.findFoodByRestId(restReceiveRemote.id_rest)
+        val foodList = mutableListOf<MutableMap<String,String>>()
+
+        for (item in restMenudto) {
+            val foodInfo = List_food.findFoodById(item.id_food)
+            if (foodInfo != null) {
+                foodList.add(mutableMapOf(
+                    "id_food" to foodInfo.id_food.toString(),
+                    "food_name" to foodInfo.food_name,
+                    "food_type" to foodInfo.food_type,
+                    "food_desc" to foodInfo.food_desc,
+                    "price" to foodInfo.price.toString()
+                ))
+            }
+        }
+
+        try {
+            call.respond(foodList)
         } catch (e: ExposedSQLException) {
             call.respond(HttpStatusCode.Conflict, "400")
         }

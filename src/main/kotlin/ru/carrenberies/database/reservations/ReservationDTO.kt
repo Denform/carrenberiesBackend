@@ -7,7 +7,7 @@ class ReservationDTO (
     val id_rest: Int,
     var data: String,
     val time: String,
-    val duration_time: String,
+    val duration_time: Int,
     val count_vis: Int
 ) {
     constructor(id_rest: Int, data: String) : this(
@@ -17,7 +17,18 @@ class ReservationDTO (
         id_rest,
         data,
         "",
+        0,
+        0
+    )
+
+    constructor(id_book: Int) : this(
+        id_book,
+        0,
+        0,
+        0,
         "",
+        "",
+        0,
         0
     )
 }

@@ -13,5 +13,9 @@ fun Application.configureRestRouting() {
         post("/getRestFoodTypes") {
             RestController(call).getFoodTypes()
         }
+
+        post("/getRestFood") {
+            RestController(call).getRestFood()
+        }
     }
 }

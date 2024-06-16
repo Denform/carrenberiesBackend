@@ -8,8 +8,17 @@ data class ReservReceiveRemote(
     val id_rest: Int,
     val data: String,
     val time: String,
-    val duration_time: String,
+    val duration_time: Int,
     val count_vis: Int
+)
+
+@Serializable
+data class ReservReceiveRemoteForFindId(
+    val id_table: Int,
+    val id_rest: Int,
+    val data: String,
+    val time: String,
+    val listFood: MutableList<MutableMap<String,Int>>
 )
 
 //@Serializable

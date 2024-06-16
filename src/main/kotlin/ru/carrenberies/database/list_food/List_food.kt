@@ -1,11 +1,8 @@
 package ru.carrenberies.database.list_food
 
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
-import ru.carrenberies.database.restaurants.Restaurants
-import ru.carrenberies.database.restaurants.RestaurantsDTO
 
 object List_food: Table() {
     private val id_food = List_food.integer("id_food")

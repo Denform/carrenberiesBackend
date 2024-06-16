@@ -1,11 +1,8 @@
 package ru.carrenberies.database.rest_menu
 
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
-import ru.carrenberies.database.reservations.ReservationDTO
-import ru.carrenberies.database.reservations.Reservations
 
 object Rest_menu: Table() {
     private val id_rest = Rest_menu.integer("id_rest")
